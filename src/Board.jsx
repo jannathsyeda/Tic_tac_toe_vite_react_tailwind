@@ -4,9 +4,8 @@ export function Square({value , onSqureClick}){
   return  <button className="bg-white border border-gray-400 h-12 w-12 m-1 leading-9 text-lg" onClick={onSqureClick}>{value} </button>
 }
 
-function Board() {
-  const [Squares, setSquares]=useState(Array(9).fill(null));
-  const [IsXNext,setIsXNext]=useState(true);
+function Board({IsXNext, Squares, onPlay }) {
+  
 
   const winner =calculateWinner(Squares);
   let status;
@@ -19,7 +18,7 @@ function Board() {
 
 
   function handleClick(i){
-    if(Squares[i]){
+    if(Squares[i] || calculateWinner(Squares)){
       return;
     }
     
@@ -29,8 +28,7 @@ function Board() {
         }else{
            nextSquares[i]="O"
         }
-    setSquares(nextSquares);
-    setIsXNext(!IsXNext);
+  onPlay(nextSquares)
 
 
   }
@@ -63,7 +61,7 @@ function Board() {
   )
 }
 
-export default Board
+ 
 
 function calculateWinner(squares) {
   const lines = [
@@ -83,4 +81,43 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+
+export default function Game(){
+
+  const [history, setHistory]=useState([Array(9).fill(null)]);
+  const [IsXNext,setIsXNext]=useState(true);
+
+  const currentSquare=history[history.length-1];
+
+  function handlePlay(nextSquares){
+    setIsXNext(!IsXNext);
+    setHistory([...history, nextSquares])
+
+  }
+
+
+  return(
+<div>
+
+  <div>
+  <Board 
+  IsXNext={IsXNext}
+  Squares={currentSquare}
+  onPlay={handlePlay}
+  
+  />
+
+  </div>
+  <div>
+    {/* <ol>fsf</ol> */}
+  </div>
+
+</div>
+  )
+
+
+
+
 }
